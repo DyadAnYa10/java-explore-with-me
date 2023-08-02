@@ -1,11 +1,11 @@
-package ru.practicum.stats.client;
+package ru.practicum.client;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.statsdto.HitDto;
+import ru.practicum.statsdto.StatDto;
 
 import java.util.List;
 import java.util.Map;
@@ -18,21 +18,26 @@ public class StatClient {
     @Value("${stats-server.url}")
     private String serverUrl;
 
-    public ResponseEntity<Object> saveHit(HitDto hitDto) {
-        return rest.postForEntity(serverUrl.concat("/hit"),
-                hitDto,
-                Object.class);
+    public void saveInfo(HitDto hitDto) {
+        rest.postForLocation(serverUrl.concat("/hit"), hitDto);
     }
 
-    public ResponseEntity<Object> getStatistics(String start, String end, List<String> uris, Boolean unique) {
+    public List<StatDto> getStatistics(String start, String end, List<String> uris, Boolean unique) {
         Map<String, Object> parameters = Map.of(
                 "start", start,
                 "end", end,
                 "uris", uris,
                 "unique", unique);
 
-        return rest.getForEntity(serverUrl.concat("/stats?start={start}&end={end}&uris={uris}&unique={unique}"),
-                Object.class,
+        StatDto[] statistics = rest.getForObject(
+                serverUrl.concat("/stats?start={start}&end={end}&uris={uris}&unique={unique}"),
+                StatDto[].class,
                 parameters);
+
+        if (statistics == null) {
+            return List.of();
+        }
+
+        return List.of(statistics);
     }
 }
