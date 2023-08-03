@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.exception;
+package ru.practicum.mainservice.model.exception;
 
 import lombok.*;
 

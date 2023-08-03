@@ -9,7 +9,7 @@ import ru.practicum.mainservice.dto.compilation.CompilationNewDto;
 import ru.practicum.mainservice.dto.compilation.CompilationUpdateRequest;
 import ru.practicum.mainservice.entity.Compilation;
 import ru.practicum.mainservice.entity.Event;
-import ru.practicum.mainservice.exception.NoFoundObjectException;
+import ru.practicum.mainservice.model.exception.NoFoundObjectException;
 import ru.practicum.mainservice.repository.CompilationRepository;
 import ru.practicum.mainservice.service.mapper.CompilationMapper;
 

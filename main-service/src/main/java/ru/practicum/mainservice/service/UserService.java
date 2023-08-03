@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.mainservice.dto.user.UserDto;
 import ru.practicum.mainservice.entity.User;
-import ru.practicum.mainservice.exception.NoFoundObjectException;
+import ru.practicum.mainservice.model.exception.NoFoundObjectException;
 import ru.practicum.mainservice.repository.UserRepository;
 import ru.practicum.mainservice.service.mapper.UserMapper;
 

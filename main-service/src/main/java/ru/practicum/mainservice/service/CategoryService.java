@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.mainservice.dto.category.CategoryDto;
 import ru.practicum.mainservice.entity.Category;
-import ru.practicum.mainservice.exception.NoFoundObjectException;
+import ru.practicum.mainservice.model.exception.NoFoundObjectException;
 import ru.practicum.mainservice.repository.CategoryRepository;
 import ru.practicum.mainservice.service.mapper.CategoryMapper;
 
@@ -17,7 +17,6 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    @Transactional
     public CategoryDto createCategory(CategoryDto categoryDto) {
         Category savedCategory = categoryRepository.save(CategoryMapper.toCategory(categoryDto));
 
@@ -33,7 +32,6 @@ public class CategoryService {
         return CategoryMapper.toCategoryDto(categoryRepository.save(category));
     }
 
-    @Transactional
     public void deleteCategoryById(Long categoryId) {
         Category category = getCategoryByIdIfExist(categoryId);
         categoryRepository.delete(category);
