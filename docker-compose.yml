@@ -1,48 +1,62 @@
 version: '3.1'
 services:
   stats-server:
-    build: stats-service/stats-server
-    image: stat-server-image
-    container_name: stats-server-container
-    ports:
-      - "9090:9090"
+    build: ./stats-service/stats-server
+    image: stats_service_image
+    container_name: stats_service
     depends_on:
       - stats-db
+    ports:
+      - "9090:9090"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stat-server
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - STATS_DRIVER=org.postgresql.Driver
+      - STATS_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/ewm-stats
+      - STATS_DB=ewm-stats
+      - STATS_DB_USER=postgres
+      - STATS_DB_PASSWORD=4yap
+      - PORT=9090
 
   stats-db:
     image: postgres:14-alpine
-    container_name: stat-db-container
+    container_name: stats_db
+    volumes:
+      - stats-data:/ann/lib/postgres
     ports:
-      - "6541:5432"
+      - "5432:5432"
     environment:
-      - POSTGRES_DB=stat-server
+      - POSTGRES_DB=ewm-stats
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=4yap
 
   ewm-service:
-    build: main-service
-    image: main-service-image
-    container_name: main-service-container
-    ports:
-      - "8080:8080"
+    build: ./main-service
+    image: ewm_service_image
+    container_name: ewm_service
     depends_on:
       - ewm-db
-      - stats-server
+    ports:
+      - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/main-service
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EWM_DRIVER=org.postgresql.Driver
+      - EWM_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-main
+      - EWM_DB=ewm-main
+      - EWM_DB_USER=postgres
+      - EWM_DB_PASSWORD=4yap
+      - PORT=8080
+      - STAT_SERVER_URL=http://stats-server:9090
 
   ewm-db:
     image: postgres:14-alpine
-    container_name: main-db-container
+    container_name: ewm_db
+    volumes:
+      - ewm-data:/ann/lib/postgres
     ports:
-      - "6542:5432"
+      - "5433:5433"
     environment:
-      - POSTGRES_DB=main-service
+      - POSTGRES_DB=ewm-main
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=4yap
+
+volumes:
+  stats-data:
+  ewm-data:
