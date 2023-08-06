@@ -19,17 +19,7 @@ public class RequestMapper {
                 .build();
     }
 
-    public  Request toObject(RequestDto dto) {
-        return Request.builder()
-                .id(dto.getId())
-                .event(null)
-                .created(dto.getCreated())
-                .requester(null)
-                .status(dto.getStatus())
-                .build();
-    }
-
-    public  List<RequestDto> toDtoList(List<Request> requests) {
+    public  List<RequestDto> toDtos(List<Request> requests) {
         return requests.stream()
                 .map(RequestMapper::toDto)
                 .collect(Collectors.toList());

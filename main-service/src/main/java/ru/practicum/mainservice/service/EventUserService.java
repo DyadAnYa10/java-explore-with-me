@@ -13,9 +13,9 @@ import ru.practicum.mainservice.dto.event.EventUpdateUserRequest;
 import ru.practicum.mainservice.entity.Category;
 import ru.practicum.mainservice.entity.Event;
 import ru.practicum.mainservice.entity.User;
-import ru.practicum.mainservice.model.exception.EventConflictException;
-import ru.practicum.mainservice.model.exception.IncorrectRequestException;
-import ru.practicum.mainservice.model.exception.NoFoundObjectException;
+import ru.practicum.mainservice.exception.EventConflictException;
+import ru.practicum.mainservice.exception.IncorrectRequestException;
+import ru.practicum.mainservice.exception.NoFoundObjectException;
 import ru.practicum.mainservice.model.EventState;
 import ru.practicum.mainservice.repository.EventRepository;
 import ru.practicum.mainservice.service.mapper.EventMapper;
@@ -41,10 +41,10 @@ public class EventUserService {
         User user = userService.getUserByIdIfExist(userId);
         Category category = categoryService.getCategoryByIdIfExist(request.getCategory());
 
-        Event event = EventMapper.toEvent(request, category, user);
+        Event event = EventMapper.fromDto(request, category, user);
         Event savedEvent = eventRepository.save(event);
 
-        return EventMapper.toEventFullDto(savedEvent);
+        return EventMapper.toFullDto(savedEvent);
     }
 
     public List<EventShortDto> getEventsByUserId(Long userId, Integer from, Integer size) {
@@ -52,13 +52,13 @@ public class EventUserService {
         userService.checkExistUserById(userId);
 
         List<Event> events = eventRepository.findAllByInitiatorId(userId, pageable);
-        return EventMapper.toEventShortDtoList(events);
+        return EventMapper.toShortDtos(events);
     }
 
     public EventFullDto getEventByUserIdAndEventId(Long userId, Long eventId) {
         userService.checkExistUserById(userId);
         Event event = getEventByIdAndInitiatorIdIfExist(eventId, userId);
-        return EventMapper.toEventFullDto(event);
+        return EventMapper.toFullDto(event);
     }
 
     public EventFullDto updateEventByUserIdAndEventId(Long userId, Long eventId, EventUpdateUserRequest request) {
@@ -94,7 +94,7 @@ public class EventUserService {
             foundEvent.setDescription(request.getDescription());
         }
         if (Objects.nonNull(request.getLocation())) {
-            foundEvent.setLocation(LocationMapper.toLocation(request.getLocation()));
+            foundEvent.setLocation(LocationMapper.fromDto(request.getLocation()));
         }
         if (Objects.nonNull(request.getParticipantLimit())) {
             foundEvent.setParticipantLimit(request.getParticipantLimit());
@@ -114,7 +114,7 @@ public class EventUserService {
         }
 
         Event updatedEvent = eventRepository.save(foundEvent);
-        return EventMapper.toEventFullDto(updatedEvent);
+        return EventMapper.toFullDto(updatedEvent);
     }
 
     public Event getEventByIdAndInitiatorIdIfExist(Long eventId, Long userId) {

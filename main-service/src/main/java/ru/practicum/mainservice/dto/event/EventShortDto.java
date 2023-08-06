@@ -3,9 +3,11 @@ package ru.practicum.mainservice.dto.event;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.mainservice.dto.category.CategoryDto;
+import ru.practicum.mainservice.dto.comment.CommentDto;
 import ru.practicum.mainservice.dto.user.UserShortDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -31,4 +33,6 @@ public class EventShortDto {
     private String title;
 
     private Integer views;
+
+    private List<CommentDto> comments;
 }

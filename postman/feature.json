@@ -1,0 +1,1094 @@
+{
+	"info": {
+		"_postman_id": "984c6018-a96b-4f7f-99bf-41394c4e6ea8",
+		"name": "feauture_comments",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add comment with empty text",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 400\", function () {\r",
+							"    pm.response.to.be.badRequest;    \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Body must contains field 'status'\", function () {\r",
+							"    pm.expect(target).to.have.property('status');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=0",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "0",
+							"description": "(Required) id события"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "13",
+							"description": "(Required) id текущего пользователя"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add comment with user  not exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 404\", function () {\r",
+							"    pm.response.to.be.notFound;    \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Test commen\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=0",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "0",
+							"description": "(Required) id события"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "-99",
+							"description": "(Required) id текущего пользователя"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add comment to not exist event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 404\", function () {\r",
+							"    pm.response.to.be.notFound;    \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Test commen\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=-99",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "-99",
+							"description": "(Required) id события"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "13",
+							"description": "(Required) id текущего пользователя"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add comment to not publish event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 409\", function () {\r",
+							"    pm.response.to.have.status(409);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Test comment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "1",
+							"description": "(Required) id события PENDING"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "7",
+							"description": "(Required) id текущего пользователя"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin delete comment not exist",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 404\", function () {\r",
+							"    pm.response.to.be.notFound;    \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/admin/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "commentId",
+							"value": "-99"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add comment by initiator",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 201\", function () {\r",
+							"    pm.response.to.have.status(201);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Body must consist fields: id, text, author, createdOn, event\", function () {\r",
+							"    pm.expect(response).to.have.property('id');\r",
+							"    pm.expect(response).to.have.property('text');\r",
+							"    pm.expect(response).to.have.property('author');\r",
+							"    pm.expect(response).to.have.property('createdOn');\r",
+							"    pm.expect(response).to.have.property('event');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The comment must be created and contained in the body of the response in field 'text'\", function () {\r",
+							"    pm.expect(response.text).to.equal(\"Test comment\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Test comment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=5",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "5",
+							"description": "(Required) id события"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "12",
+							"description": "(Required) id текущего пользователя"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add second comment by initiator",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 403\", function () {\r",
+							"    pm.response.to.have.status(403);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Test comment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=5",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "5",
+							"description": "(Required) id события"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "12",
+							"description": "(Required) id текущего пользователя"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get event by id with comments",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 200\", function () {\r",
+							"    pm.response.to.have.status(200);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Event must consist field 'comments'\", function() {\r",
+							"    pm.expect(response).to.have.property('comments');\r",
+							"    const comments = response.comments;\r",
+							"    pm.expect(comments.length).to.equal(1);\r",
+							"    pm.expect(comments[0].text).to.equal(\"Test comment\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/events/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"events",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add comment by member of event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 201\", function () {\r",
+							"    pm.response.to.have.status(201);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Comments must consist fileds: id, text, author, createdOn, event\", function () {\r",
+							"    pm.expect(response).to.have.property('id');\r",
+							"    pm.expect(response).to.have.property('text');\r",
+							"    pm.expect(response).to.have.property('author');\r",
+							"    pm.expect(response).to.have.property('createdOn');\r",
+							"    pm.expect(response).to.have.property('event');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The comment must be created and contained in the body of the response in field 'text'\", function () {\r",
+							"    pm.expect(response.text).to.equal(\"Test comment\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Test comment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=5",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "5",
+							"description": "(Required) id события"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "13",
+							"description": "(Required) id текущего пользователя"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add comment by not member of event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 403 and containts body in json format\", function () {\r",
+							"    pm.response.to.have.status(403);    \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Test commen\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=5",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "5",
+							"description": "(Required) id события"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "14",
+							"description": "(Required) id текущего пользователя"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update comment by user is not author",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 403\", function () {\r",
+							"    pm.response.to.have.status(403);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Updated comment text\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "15"
+						},
+						{
+							"key": "commentId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update comment by author",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 200\", function () {\r",
+							"    pm.response.to.have.status(200);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Comments must consist fields: id, text, author, createdOn, Updated comment text by author, event\", function () {\r",
+							"    pm.expect(response).to.have.property('id');\r",
+							"    pm.expect(response).to.have.property('text');\r",
+							"    pm.expect(response).to.have.property('author');\r",
+							"    pm.expect(response).to.have.property('createdOn');    \r",
+							"    pm.expect(response).to.have.property('event');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The comment must be updated and contained in the body of the response in field 'text'\", function () {\r",
+							"    pm.expect(response.text).to.equal(\"Updated comment text by author\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Updated comment text by author\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "12"
+						},
+						{
+							"key": "commentId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete comment by user is not author",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 403\", function () {\r",
+							"    pm.response.to.have.status(403);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "14"
+						},
+						{
+							"key": "commentId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete comment by author",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 204\", function () {\r",
+							"    pm.response.to.have.status(204);   \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "12",
+							"description": "(Required) id текущего пользователя"
+						},
+						{
+							"key": "commentId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete not exist comment by author",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 404\", function () {\r",
+							"    pm.response.to.have.status(404);   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response must contains body in json format\", function () {   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "12",
+							"description": "(Required) id текущего пользователя"
+						},
+						{
+							"key": "commentId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete comment by admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status must be 204t\", function () {\r",
+							"    pm.response.to.have.status(204);   \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/admin/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "commentId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
