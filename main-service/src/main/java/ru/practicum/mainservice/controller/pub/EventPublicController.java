@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mainservice.dto.comment.CommentDto;
 import ru.practicum.mainservice.dto.event.EventFullDto;
 import ru.practicum.mainservice.dto.event.EventShortDto;
+import ru.practicum.mainservice.service.CommentService;
 import ru.practicum.mainservice.service.EventPublicService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventPublicController {
     private final EventPublicService eventService;
+    private final CommentService commentService;
 
     @GetMapping
     public List<EventShortDto> getEvents(@RequestParam(name = "text", required = false) String text,
@@ -34,8 +37,9 @@ public class EventPublicController {
                                          @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
                                          @RequestParam(name = "size", defaultValue = "10") @Positive Integer size,
                                          HttpServletRequest request) {
-        log.info("EventPublicController: Запрос на получение всех событий с параметрами запроса: text={}, categories={}, paid={}, " +
-                        "rangeStart={}, rangeEnd={}, onlyAvailable={}, sort={}, from={}, size={}, request={}",
+        log.info("EventPublicController: Запрос на получение всех событий с параметрами запроса: text={}, " +
+                        "categories={}, paid={}, rangeStart={}, rangeEnd={}, onlyAvailable={}, sort={}, from={}, " +
+                        "size={}, request={}",
                 text, categories, paid, startDate, endDate, onlyAvailable, sort, from, size, request.getRequestURI());
 
         return eventService.getAllEvents(text, categories, paid, startDate, endDate, onlyAvailable, sort,
@@ -47,5 +51,13 @@ public class EventPublicController {
                                  HttpServletRequest request) {
         log.info("EventPublicController: Запрос на получение события с id='{}'", eventId);
         return eventService.getEventById(eventId, request.getRemoteAddr(), request.getRequestURI());
+    }
+
+    @GetMapping("/{eventId}/comments")
+    public List<CommentDto> getEventComments(@PathVariable Long eventId,
+                                             @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                             @RequestParam(defaultValue = "10") @Positive Integer size) {
+        log.info("EventPublicController запрос на получение комментариев к событию с id='{}'", eventId);
+        return commentService.getAllCommentsByEventId(eventId, from, size);
     }
 }

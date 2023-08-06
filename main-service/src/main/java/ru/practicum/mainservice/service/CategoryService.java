@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.mainservice.dto.category.CategoryDto;
 import ru.practicum.mainservice.entity.Category;
-import ru.practicum.mainservice.model.exception.NoFoundObjectException;
+import ru.practicum.mainservice.exception.NoFoundObjectException;
 import ru.practicum.mainservice.repository.CategoryRepository;
 import ru.practicum.mainservice.service.mapper.CategoryMapper;
 
@@ -17,10 +17,11 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
+    @Transactional
     public CategoryDto createCategory(CategoryDto categoryDto) {
-        Category savedCategory = categoryRepository.save(CategoryMapper.toCategory(categoryDto));
+        Category savedCategory = categoryRepository.save(CategoryMapper.fromDto(categoryDto));
 
-        return CategoryMapper.toCategoryDto(savedCategory);
+        return CategoryMapper.toDto(savedCategory);
     }
 
     @Transactional
@@ -29,9 +30,10 @@ public class CategoryService {
 
         category.setName(request.getName());
 
-        return CategoryMapper.toCategoryDto(categoryRepository.save(category));
+        return CategoryMapper.toDto(categoryRepository.save(category));
     }
 
+    @Transactional
     public void deleteCategoryById(Long categoryId) {
         Category category = getCategoryByIdIfExist(categoryId);
         categoryRepository.delete(category);
@@ -40,13 +42,13 @@ public class CategoryService {
     public List<CategoryDto> getCategories(Integer from, Integer size) {
         List<Category> categories = categoryRepository.findAll(PageRequest.of(from, size)).getContent();
 
-        return CategoryMapper.toCategoryDtosList(categories);
+        return CategoryMapper.toDtos(categories);
     }
 
     public CategoryDto getCategoryById(Long categoryId) {
         Category category = getCategoryByIdIfExist(categoryId);
 
-        return CategoryMapper.toCategoryDto(category);
+        return CategoryMapper.toDto(category);
     }
 
     public Category getCategoryByIdIfExist(Long categoryId) {

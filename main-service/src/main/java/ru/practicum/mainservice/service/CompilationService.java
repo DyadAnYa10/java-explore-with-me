@@ -9,7 +9,7 @@ import ru.practicum.mainservice.dto.compilation.CompilationNewDto;
 import ru.practicum.mainservice.dto.compilation.CompilationUpdateRequest;
 import ru.practicum.mainservice.entity.Compilation;
 import ru.practicum.mainservice.entity.Event;
-import ru.practicum.mainservice.model.exception.NoFoundObjectException;
+import ru.practicum.mainservice.exception.NoFoundObjectException;
 import ru.practicum.mainservice.repository.CompilationRepository;
 import ru.practicum.mainservice.service.mapper.CompilationMapper;
 
@@ -21,11 +21,11 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CompilationService {
     private final CompilationRepository compilationRepository;
-    private final EventPublicService eventService;
+    private final EventService eventService;
 
     @Transactional
     public CompilationDto createCompilation(CompilationNewDto request) {
-        Compilation compilation = CompilationMapper.toCompilation(request);
+        Compilation compilation = CompilationMapper.fromDto(request);
         if (!Objects.nonNull(request.getPinned())) {
             compilation.setPinned(false);
         }
@@ -36,7 +36,7 @@ public class CompilationService {
         }
 
         Compilation savedCompilation = compilationRepository.save(compilation);
-        return CompilationMapper.toCompilationDto(savedCompilation);
+        return CompilationMapper.toDto(savedCompilation);
     }
 
     @Transactional
@@ -57,7 +57,7 @@ public class CompilationService {
         }
 
         Compilation savedCompilation = compilationRepository.save(foundCompilation);
-        return CompilationMapper.toCompilationDto(savedCompilation);
+        return CompilationMapper.toDto(savedCompilation);
     }
 
     @Transactional
@@ -70,12 +70,12 @@ public class CompilationService {
         Pageable pageable = PageRequest.of(from / size, size);
 
         List<Compilation> compilations = compilationRepository.findAllByPinned(pinned, pageable);
-        return CompilationMapper.toCompilationDtoList(compilations);
+        return CompilationMapper.toDtos(compilations);
     }
 
     public CompilationDto getCompilationById(Long compilationId) {
         Compilation foundCompilation = getCompilationByIdIfExist(compilationId);
-        return CompilationMapper.toCompilationDto(foundCompilation);
+        return CompilationMapper.toDto(foundCompilation);
     }
 
     private Compilation getCompilationByIdIfExist(Long compilationId) {

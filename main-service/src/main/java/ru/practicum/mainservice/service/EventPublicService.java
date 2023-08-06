@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.practicum.client.StatClient;
+import ru.practicum.mainservice.dto.comment.CommentDto;
 import ru.practicum.mainservice.dto.event.EventFullDto;
 import ru.practicum.mainservice.dto.event.EventShortDto;
 import ru.practicum.mainservice.entity.Event;
-import ru.practicum.mainservice.model.exception.IncorrectRequestException;
-import ru.practicum.mainservice.model.exception.NoFoundObjectException;
+import ru.practicum.mainservice.exception.NoFoundObjectException;
 import ru.practicum.mainservice.model.EventState;
 import ru.practicum.mainservice.repository.EventRepository;
 import ru.practicum.mainservice.service.mapper.EventMapper;
@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,12 +29,14 @@ public class EventPublicService {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final EventRepository eventRepository;
     private final StatClient statClient;
+    private final EventService generalEventService;
+    private final CommentService commentService;
 
     public List<EventShortDto> getAllEvents(String text, List<Long> categories, Boolean paid,
                                             LocalDateTime startDate, LocalDateTime endDate,
                                             Boolean onlyAvailable, String sort,
                                             Integer from, Integer size, String ip, String uri) {
-        checkEndIsAfterStart(startDate, endDate);
+        generalEventService.checkEndIsAfterStart(startDate, endDate);
         saveInfoToStatistics(ip, uri);
 
         Pageable pageable = PageRequest.of(from / size, size);
@@ -76,29 +77,22 @@ public class EventPublicService {
         List<Event> events = eventRepository.findAll(specification, pageable);
         updateViewsOfEvents(events);
 
-        return EventMapper.toEventShortDtoList(events);
+        return EventMapper.toShortDtos(events);
     }
 
     public EventFullDto getEventById(Long eventId, String ip, String uri) {
         Event event = eventRepository.findByIdAndState(eventId, EventState.PUBLISHED)
-                .orElseThrow(() -> new NoFoundObjectException("Event not found"));
+                .orElseThrow(() -> new NoFoundObjectException(
+                        String.format("Событие с id='%s' и статусом 'PUBLISHED' не найдено", eventId)));
 
+        List<CommentDto> comments = commentService.getAllCommentsByEventId(eventId, 0, 10);
         saveInfoToStatistics(ip, uri);
         updateViewsOfEvents(List.of(event));
 
-        return EventMapper.toEventFullDto(event);
-    }
+        EventFullDto eventDto = EventMapper.toFullDto(event);
+        eventDto.setComments(comments);
 
-
-
-    public List<Event> getAllEventsByIdIn(Set<Long> events) {
-        return eventRepository.findAllByIdIn(events);
-    }
-
-    private void checkEndIsAfterStart(LocalDateTime startDate, LocalDateTime endDate) {
-        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            throw new IncorrectRequestException("Start date can not after end date");
-        }
+        return eventDto;
     }
 
     private void saveInfoToStatistics(String ip, String uri) {

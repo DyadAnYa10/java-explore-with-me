@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @UtilityClass
 public class EventMapper {
-    public Event toEvent(EventNewDto eventNewDto, Category category, User initiator) {
+    public Event fromDto(EventNewDto eventNewDto, Category category, User initiator) {
         return Event.builder()
                 .annotation(eventNewDto.getAnnotation())
                 .category(category)
@@ -42,7 +42,7 @@ public class EventMapper {
                 .build();
     }
 
-    public EventShortDto toEventShortDto(Event event) {
+    public EventShortDto toShortDto(Event event) {
         return EventShortDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
@@ -63,7 +63,7 @@ public class EventMapper {
                 .build();
     }
 
-    public EventFullDto toEventFullDto(Event event) {
+    public EventFullDto toFullDto(Event event) {
         return EventFullDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
@@ -93,15 +93,15 @@ public class EventMapper {
                 .build();
     }
 
-    public List<EventShortDto> toEventShortDtoList(List<Event> events) {
+    public List<EventShortDto> toShortDtos(List<Event> events) {
         return events.stream()
-                .map(EventMapper::toEventShortDto)
+                .map(EventMapper::toShortDto)
                 .collect(Collectors.toList());
     }
 
-    public List<EventFullDto> toEventFullDtoList(List<Event> events) {
+    public List<EventFullDto> toFullDtos(List<Event> events) {
         return events.stream()
-                .map(EventMapper::toEventFullDto)
+                .map(EventMapper::toFullDto)
                 .collect(Collectors.toList());
     }
 }

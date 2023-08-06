@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 @UtilityClass
 public class UserMapper {
-    public UserDto toUserDto(User user) {
+    public UserDto toDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -17,16 +17,16 @@ public class UserMapper {
                 .build();
     }
 
-    public User toUser(UserDto userDto) {
+    public User fromDto(UserDto userDto) {
         return User.builder()
                 .name(userDto.getName())
                 .email(userDto.getEmail())
                 .build();
     }
 
-    public List<UserDto> toUserDtosList(List<User> users) {
+    public List<UserDto> toDtos(List<User> users) {
         return users.stream()
-                .map(UserMapper::toUserDto)
+                .map(UserMapper::toDto)
                 .collect(Collectors.toList());
     }
 }
