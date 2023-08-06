@@ -1,6 +1,6 @@
 # java-explore-with-me 
 
-# https://github.com/DyadAnYa10/java-explore-with-me/pull/5
+# [Ссылка на проект](https://github.com/DyadAnYa10/java-explore-with-me/pull/5)
 
 ## Технологии: Java 11 + Spring Boot + Maven + Lombok + JPA + Hibernate + PostgreSQL + Docker
 
