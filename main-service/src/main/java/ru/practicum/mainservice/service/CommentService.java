@@ -61,7 +61,7 @@ public class CommentService {
         return CommentMapper.toDto(savedComment);
     }
 
-    @Transactional
+
     public void deleteCommentById(Long commentId, Long userId) {
         Comment comment = getCommentByIdIfExist(commentId);
 
@@ -70,7 +70,7 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    @Transactional
+
     public void deleteComment(Long commentId) {
         checkExistCommentById(commentId);
         commentRepository.deleteById(commentId);
