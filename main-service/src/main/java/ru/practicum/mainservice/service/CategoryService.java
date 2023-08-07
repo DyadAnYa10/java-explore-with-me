@@ -17,14 +17,14 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    @Transactional
+
     public CategoryDto createCategory(CategoryDto categoryDto) {
         Category savedCategory = categoryRepository.save(CategoryMapper.fromDto(categoryDto));
 
         return CategoryMapper.toDto(savedCategory);
     }
 
-    @Transactional
+
     public CategoryDto updateCategoryById(Long categoryId, CategoryDto request) {
         Category category = getCategoryByIdIfExist(categoryId);
 
